@@ -16,7 +16,7 @@ class Create {
   constructor(options) {
     this.path = options.path || ["database"],
     this.table = options.table || ["main"];
-//  this.file = options.file || ["storage.json"];
+
     if (fs.existsSync(path.join(process.cwd(), this.path)) === false) {
       fs.mkdirSync(path.join(process.cwd(), this.path));
     }
