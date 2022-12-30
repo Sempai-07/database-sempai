@@ -92,11 +92,7 @@ class Create {
   
   has(table, key) {
     let db = get(table, this.path);
-    if (db[key] === undefined) {
-      return false;
-    } else {
-      return true;
-    }
+    db[key] === undefined ? true : false
     /*
      * Эта функция проверяет, существует ли указанная переменная, выдаёт логическое выражение:
      * true - указанная переменная существует
