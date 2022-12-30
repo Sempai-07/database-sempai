@@ -1,5 +1,7 @@
 <h1>Database sempai</h1>
 
+[![NPM Downloads](https://img.shields.io/npm/dt/database-sempai.svg?maxAge=3600)](https://www.npmjs.com/package/database-senpai)
+
 ### Установка
 ```js
 npm i database-sempai@1.0.0
@@ -21,13 +23,20 @@ const db = new Create({
 
 #### Функции
 `add('table', 'key', 'value')` - добавит к старому значению, новое значение
+
 `set('table', 'key', 'value')` - изменит значение переменной, если переменной нет она создаться автоматически
+
 `editName('table', 'oldkey', 'newkey')` - изменит название переменной
 `get('table', 'key', false/true)` - выдаст значение переменной
+
 `all('table')` - покажет всё содержимое таблицы
+
 `delete('table', 'key')` - удалит переменною
+
 `deleteAll('table')` - удалит всё содержимое таблицы
+
 `has('table', 'key')` - проверит существует ли переменная
+
 `ping()` - покажет задержку в ms
 
 #### Примеры
