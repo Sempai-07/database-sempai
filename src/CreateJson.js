@@ -92,6 +92,4 @@ class CreateJson {
   }
   }
   
-module.exports = {
-  CreateJson: CreateJson
-};
+module.exports = CreateJson;

@@ -93,6 +93,4 @@ class CreateSql {
   }
   }
   
-module.exports = {
-  CreateSql: CreateSql
-};
+module.exports = CreateSql;
