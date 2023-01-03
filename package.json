@@ -1,17 +1,22 @@
 {
   "name": "database-sempai",
-  "version": "1.0.0",
-  "description": "База данных json",
-  "main": "src/index.js",
+  "version": "2.0.0",
+  "description": "База данных json/qsl",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sempai-07/database-sempai/tree/v2"
   },
   "keywords": [
     "db",
     "dbd",
     "json",
-    "database"
+    "database",
+    "sql"
   ],
-  "author": "",
+  "author": "Sempai<database.sempai07@gmail.com>",
   "license": "ISC"
 }
