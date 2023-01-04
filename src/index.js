@@ -1,2 +1,2 @@
-exports.CreateSql = require("./CreateSql.js");
-exports.CreateJson = require("./CreateJson.js");
+exports.CreateSql = require("./structures/CreateSql.js");
+exports.CreateJson = require("./structures/CreateJson.js");
