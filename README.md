@@ -6,7 +6,7 @@
 
 ### Установка
 ```js
-npm i database-sempai@2.0.0
+npm i database-sempai@2.0.1
 ```
 
 ### Подключение база данных Sql
@@ -103,7 +103,7 @@ db.ping()
 
 ### Installation
  ```js
- npm i database-sempai@2.0.0
+ npm i database-sempai@2.0.1
  ```
 
  ### Sql database connection
