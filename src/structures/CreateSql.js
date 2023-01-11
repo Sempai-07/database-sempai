@@ -1,9 +1,19 @@
 const fs = require('fs');
 const path = require('path');
-const { EventEmitter } = require("events");
+const { EventEmitter } = require('events');
 const cipher = require("../util/cipher.js");
 const decoding = require("../util/decoding.js");
 const DatabaseError = require("../util/DatabaseError.js");
+
+const keys = (obj) => {
+   if (typeof(obj) === 'object') return Object.keys(obj)
+   else return [];
+};
+
+const valuess = (obj) => {
+   if (typeof(obj) === 'object') return Object.values(obj)
+   else return [];
+};
 
 const get = (table, dir) => {
   let db = fs.readFileSync(path.join(process.cwd(), dir, table, "storage.sql"), "utf8");
@@ -12,7 +22,7 @@ const get = (table, dir) => {
 };
 
 const set = (table, dir, db, encryption = false) => {
-  let content = JSON.stringify(db)
+  let content = JSON.stringify(db);
     fs.writeFileSync(path.join(process.cwd(), dir, table, "storage.sql"), content);
 };
     
@@ -28,6 +38,7 @@ class CreateSql extends EventEmitter {
       fs.mkdirSync(path.join(process.cwd(), this.path));
     }
     let table_file = this.table;
+    if(Array.isArray(table_file)) {
     for (var i = 0; i < table_file.length; i++) {
       if (fs.existsSync(path.join(process.cwd(), `${this.path}/${table_file[i]}`)) === false) {
         fs.mkdirSync(path.join(process.cwd(), `${this.path}/${table_file[i]}`));
@@ -35,19 +46,25 @@ class CreateSql extends EventEmitter {
       if (fs.existsSync(path.join(process.cwd(), this.path, table_file[i], "storage.sql")) === false) {
           fs.writeFileSync(path.join(process.cwd(), this.path, table_file[i], "storage.sql"), "{}");
       }
-      }
-      // параметр table указывайте в [], если нет будет ошибка или же эта хрень не будет работать нормально
+      // параметр table указывайте в []
+    }
+    } else {
+      console.log(new DatabaseError("Invalid array table"));
+      process.exit();
+    }
     }
 
   set(table, key, value,  encryption = false) {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
     let db = get(table, this.path);
     let values = value;
     if (encryption) {
       if (!this.key) throw new DatabaseError("You need to specify 'key' in the class CreateSql");
       db[key] = new Object({"key": key, "value": cipher(values, this.key)});
-    } else {
+    } else if (encryption === false) {
       db[key] = new Object({"key": key, "value": values});
+    } else {
+      console.log(new TypeError("Invalid type 'set'"));
     }
     set(table, this.path, db);
     // Эта функция создаёт или же меняет содержимое переменной
@@ -57,8 +74,8 @@ class CreateSql extends EventEmitter {
     // encryption - если вы хотите зашифровать значение переменной, указывайте true, если нет false (не необязательно)
   }
   
-  get(table, key, encryption = "normal") {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
+  get(table, key, encryption = "default") {
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
     let db = get(table, this.path);
     let values = db[key]['value'];
     if (encryption === true) {
@@ -67,8 +84,10 @@ class CreateSql extends EventEmitter {
     } else if (encryption === false) {
       if (!this.key) throw new DatabaseError("You need to specify 'key' in the class CreateJson");
       return decoding(values, this.key);
-    } else if (encryption === "normal") {
+    } else if (encryption === "default") {
       return values;
+    } else {
+      console.log(new TypeError("Invalid type 'get'"));
     }
     // Эта функция выдаёт содержимое переменнои
     // table - таблица
@@ -77,22 +96,24 @@ class CreateSql extends EventEmitter {
   }
   
   all(table) {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
     let db = get(table, this.path);
     return db;
     // table - название таблицы у которой мы хотим вывести всё содержимое в json формате
   }
   
   add(table, key, value, encryption = false) {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
     let db = get(table, this.path);
     let oldValue = db[key]['value'];
     let values = value;
     if (encryption) {
       if (!this.key) throw new DatabaseError("You need to specify 'key' in the class CreateSql");
       db[key] = new Object({"key": key, "value": oldValue + cipher(value, this.key)});
-    } else {
+    } else if (encryption === false) {
       db[key] = new Object({"key": key, "value": oldValue + value});
+    } else {
+      console.log(new TypeError("Invalid type 'get'"));
     }
     set(table, this.path, db);
     // Эта функция додаёт новое значение, не изменяя старое
@@ -103,7 +124,7 @@ class CreateSql extends EventEmitter {
   }
   
   delete(table, key, oldValue) {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
     let db = get(table, this.path);
     let values = db[key]['value'];
     delete db[key];
@@ -118,13 +139,13 @@ class CreateSql extends EventEmitter {
   }
   
   deleteAll(table) {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
-      fs.writeFileSync(path.join(process.cwd(), this.path, table, "storage.sql"), "{}");
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
+    fs.writeFileSync(path.join(process.cwd(), this.path, table, "storage.sql"), "{}");
     // Эта функция удалит всё содержимое таблицы. Будьте осторожны
   }
   
   has(table, key) {
-    if(!fs.existsSync(path.join(process.cwd(), this.path, table, "storage.json"))) throw new DatabaseError("Invalid table name: " + table);
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
     let db = get(table, this.path);
     return db[key] === undefined ? false : true;
     // Эта функция проверяет, существует ли указанная переменная, выдаёт логическое выражение:
@@ -134,10 +155,19 @@ class CreateSql extends EventEmitter {
     // key - название переменной
   }
   
-  ping() {
+  info(table, type = 'ping') {
+    if(!this.table.find(a => a === table)) throw new DatabaseError("Invalid table name: " + table);
+    let db = get(table, this.path);
     const start = Date.now();
-    return Date.now() - start;
-    // Эта функция выдаёт задержку в миллисекундах
+    if (type === 'keys') return keys(db)
+    else if (type === 'values') return valuess(db)
+    else if (type === 'count') return keys(db).length
+    else if (type === 'ping') return Date.now() - start
+    else console.log(new TypeError("Invalid type info"));
+  }
+  
+  isTable(table) {
+  return this.table.find(a => a === table) === undefined ? false : true;
   }
   
   get Events() {
