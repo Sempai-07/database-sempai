@@ -6,7 +6,7 @@
 
 ### Установка
 ```js
-npm i database-sempai@2.0.2
+npm i database-sempai@2.0.4
 ```
 
 ### Подключение база данных Sql
@@ -58,7 +58,9 @@ const db = new CreateJson({
 
 `has('table', 'key')` - проверит существует ли переменная
 
-`ping()` - покажет задержку в ms
+`info('table', 'type?')` - выдаёт указанную информацию
+
+`isTable('table')` - проверит существует ли указанная таблица
 
 `connect()` - чтобы использовать событие ready, вы должны это указать в конце кода
 
@@ -121,8 +123,16 @@ db.get('main', 'weredok')
 db.deleteAll('main')
 // Удалит все переменные в таблице
 
-db.ping()
-// Вернёт задержку в ms
+db.info('main', 'ping')
+// ping - выдаст задержку в ms (по умолчанию)
+// count - выдаст количество переменных в таблице
+// values - выдаст всё содержимое в массиве (в .sql немного по-другому)
+// keys - выдаст все переменные (название) в массиве
+
+db.isTable('main')
+// Выдаст true - потому что таблица существует
+db.isTable('mai')
+// Выдаст false - потому что таблицы не существует
 ```
 
 #### Примеры с шифрованием текста
@@ -139,149 +149,164 @@ db.set('main', 'test', 'sempai', true)
 db.get('main', 'test', true)
 // true - зашифрует текст
 // false - расшифрует текст
-// normal - вернёт просто значение, даже если оно зашифрованное (по умолчанию)
+// default - вернёт просто значение, даже если оно зашифрованное (по умолчанию)
 ```
 
-В противных случаях: `undefined`
-Надеюсь вам понравится 🤧
+В противных случаях: `undefined`, или ошибка в консоле
+
+<h1>Database sempai</h1>
+
+[![Discord Server](https://img.shields.io/discord/796504104565211187?color=7289da&logo=discord&logoColor=white)](https://discord.gg/EuSbT5HH8b)
+[![NPM Version](https://img.shields.io/npm/v/database-sempai.svg?maxAge=3600)](https://www.npmjs.com/package/database-sempai)
+[![NPM Downloads](https://img.shields.io/npm/dt/database-sempai.svg?maxAge=3600)](https://www.npmjs.com/package/database-sempai)
+
 
 ### Installation
- ```js
- npm i database-sempai@2.0.2
- ```
+```js
+npm i database-sempai@2.0.4
+```
 
- ### Sql database connection
- ```js
- const { CreateSql } = require('database-sempai');
+### Sql database connection
+```js
+const { CreateSql } = require('database-sempai');
 
- const db = new CreateSql({
+const db = new CreateSql({
    path: "./database-sql",
    // you can give another name
    table: ["main", "test"],
    // you can call it whatever you want
-   // just always put the table name in [].  ["name", "users"]
+   // just always put the table name in []. ["name", "users"]
    key: "sql"
    // This line is responsible for encoding the text, or rather, this is the key
    // This is optional, if you don't specify this it will be disabled, without this key you won't be able to encrypt the data (the value in the variable)
    // If you lost/forgot your key, you will lose your data
- })
- ```
+})
+```
 
- ### Json database connection
- ```js
- const { CreateJson } = require('database-sempai');
+### Json database connection
+```js
+const { CreateJson } = require('database-sempai');
 
- const db = new CreateJson({
+const db = new CreateJson({
    path: "./database-json",
    // you can give another name
    table: ["main", "test"],
    // you can call it whatever you want
-   // just always put the table name in [].  ["name", "users"]
+   // just always put the table name in []. ["name", "users"]
    key: "json"
    // This line is responsible for encoding the text, or rather, this is the key
    // This is optional, if you don't specify this it will be disabled, without this key you won't be able to encrypt the data (the value in the variable)
    // If you lost/forgot your key, you will lose your data
- })
- ```
+})
+```
 
- #### Functions
- `add('table', 'key', 'value', 'encryption?')` - add new value to old value
+#### Functions
+`add('table', 'key', 'value', 'encryption?')` - add new value to old value
 
- `set('table', 'key', 'value', 'encryption?')` - change the value of the variable, if the variable does not exist it will be created automatically
+`set('table', 'key', 'value', 'encryption?')` - change the value of the variable, if the variable does not exist it will be created automatically
 
- `get('table', 'key', 'encryption?')` - will return the value of the variable
+`get('table', 'key', 'encryption?')` - will return the value of the variable
 
- `all('table')` - show the entire contents of the table
+`all('table')` - show the entire contents of the table
 
- `delete('table', 'key', 'oldValue?')` - will delete a variable
+`delete('table', 'key', 'oldValue?')` - will delete a variable
 
- `deleteAll('table')` - delete all contents of the table
+`deleteAll('table')` - delete all contents of the table
 
- `has('table', 'key')` - check if variable exists
+`has('table', 'key')` - check if variable exists
 
- `ping()` - show delay in ms
+`info('table', 'type?')` - prints the specified information
 
- `connect()` - to use the ready event, you must specify it at the end of the code
+`isTable('table')` - check if the specified table exists
 
- #### Event
- ```js
- const { CreateJson, CreateSql} = require('database-sempai');
- // No difference for event
+`connect()` - to use the ready event, you must specify it at the end of the code
 
- const db = new CreateJson({
+#### Event
+```js
+const { CreateJson, CreateSql} = require('database-sempai');
+// No difference for event
+
+const db = new CreateJson({
    path: "./database-json",
    table: ["main", "test"],
    key: "json"
- })
+})
 
- db.on("ready", () => {
+db.on("ready", () => {
    console.log("Database connected")
- })
- 
- // Your code
+})
 
- db.connect()
- // If you don't specify this, the ready event won't fire
- ```
+// Your code
 
- #### Examples without text encryption
- ```js
- db.set('main', 'sempai', 0)
- // Variable created
+db.connect()
+// If you don't specify this, the ready event won't fire
+```
 
- db.get('main', 'sempai')
- // Returns: 0
- db.get('main', 'sempai', true)
- // Returns {key: "sempai", value: 0}
- db.get('main', 'sempai', true).value
- // Returns: 0
+#### Examples without text encryption
+```js
+db.set('main', 'sempai', 0)
+// Variable created
 
- db.add('main', 'sempai', '10')
- // Add 10 to "sempai" variable
- db.get('main', 'sempai')
- // Returns: 010
+db.get('main', 'sempai')
+// Returns: 0
+db.get('main', 'sempai', true)
+// Returns {key: "sempai", value: 0}
+db.get('main', 'sempai', true).value
+// Returns: 0
 
- db.all('main')
- // Returns: {
- // "sempai": "010"
- //}
+db.add('main', 'sempai', '10')
+// Add 10 to "sempai" variable
+db.get('main', 'sempai')
+// Returns: 010
 
- db.has('main', 'sempai')
- // Returns true
- db.has('main', 'name')
- // Returns false
+db.all('main')
+// Returns: {
+// "sempai": "010"
+//}
 
- db.set('main', 'weredok', '15')
- // Create a variable
- db.delete('main', 'weredok', true)
- // Delete the variable, if the third argument is true, then this function will return the value of the variable for the last time
+db.has('main', 'sempai')
+// Returns true
+db.has('main', 'name')
+// Returns false
 
- db.get('main', 'weredok')
- // Returns: undefined because the variable is deleted
+db.set('main', 'weredok', '15')
+// Create a variable
+db.delete('main', 'weredok', true)
+// Delete the variable, if the third argument is true, then this function will return the value of the variable for the last time
 
- db.deleteAll('main')
- // Delete all variables in the table
+db.get('main', 'weredok')
+// Returns: undefined because the variable is deleted
 
- db.ping()
- // Return delay in ms
- ```
+db.deleteAll('main')
+// Delete all variables in the table
 
- #### Examples with text encryption
- ```js
- db.add('main', 'test', 'sempai', true')
- // true - will encrypt the added text
- // false - will not encrypt the added text (default)
+db.info('main', 'ping')
+// ping - will give a delay in ms (default)
+// count - will give the number of variables in the table
+// values - will give all the contents in the array (in .sql it's a little different)
+// keys - will return all variables (name) in the array
+
+db.isTable('main')
+// Returns true - because the table exists
+db.isTable('mai')
+// Returns false - because the table does not exist
+```
+
+#### Examples with text encryption
+```js
+db.add('main', 'test', 'sempai', true')
+// true - will encrypt the added text
+// false - will not encrypt the added text (default)
 
 
- db.set('main', 'test', 'sempai', true)
- // true - will encrypt
- // false - will not encrypt (default)
+db.set('main', 'test', 'sempai', true)
+// true - will encrypt
+// false - will not encrypt (default)
 
- db.get('main', 'test', true)
- // true - will encrypt the text
- // false - will decrypt the text
- // normal - will return just the value, even if it's encrypted (default)
- ```
+db.get('main', 'test', true)
+// true - will encrypt the text
+// false - will decrypt the text
+// default - will return just the value, even if it's encrypted (default)
+```
 
- Otherwise: `undefined`
- I hope you enjoy it 🤧
+Otherwise: `undefined`, or an error in the console

@@ -1,6 +1,6 @@
 {
   "name": "database-sempai",
-  "version": "2.0.2",
+  "version": "2.0.4",
   "description": "Local database json/sql",
   "main": "src/index.js",
   "scripts": {
