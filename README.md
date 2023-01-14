@@ -4,6 +4,8 @@
 [![NPM Version](https://img.shields.io/npm/v/database-sempai.svg?maxAge=3600)](https://www.npmjs.com/package/database-sempai)
 [![NPM Downloads](https://img.shields.io/npm/dt/database-sempai.svg?maxAge=3600)](https://www.npmjs.com/package/database-senpai)
 
+#### УСТАРЕЛО
+
 ### Установка
 ```js
 npm i database-sempai@1.0.0
