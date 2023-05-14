@@ -1,0 +1,22 @@
+{
+  "name": "database-sempai",
+  "version": "2.1.6",
+  "description": "Local database",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sempai-07/database-sempai/tree/v2"
+  },
+  "keywords": [
+    "db",
+    "dbd",
+    "json",
+    "database",
+    "sql"
+  ],
+  "author": "Sempai<database.sempai07@gmail.com>",
+  "license": "ISC"
+}

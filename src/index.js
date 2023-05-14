@@ -1,0 +1,1 @@
+exports.CreateStorage = require("./structures/CreateStorage.js");
