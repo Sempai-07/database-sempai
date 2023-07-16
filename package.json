@@ -1,0 +1,33 @@
+{
+  "name": "database-sempai",
+  "version": "2.5.0",
+  "description": "Local database",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "README.md",
+    "dist/",
+    "package.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sempai-07/database-sempai"
+  },
+  "bugs": {
+    "url": "https://github.com/Sempai-07/database-sempai/issues"
+  },
+  "keywords": [
+    "db",
+    "dbd",
+    "json",
+    "database",
+    "sql"
+  ],
+  "author": "Sempai<zadmanthegreat@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.2"
+  }
+}
