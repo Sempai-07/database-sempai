@@ -292,10 +292,7 @@ class CreateStorage<K, V> extends EventEmitter {
     return db[key] === undefined ? false : true;
   }
 
-  async forEach(
-    table: string,
-    callback: (value: V, key: K, db: any) => void
-  ) {
+  async forEach(table: string, callback: (value: V, key: K, db: any) => void) {
     if (!this.table.find((a) => a === table))
       throw new ErrorTable("Invalid table name: " + table);
     const db = await get(table, this.path, this.extname);
@@ -367,7 +364,7 @@ class CreateStorage<K, V> extends EventEmitter {
       ? (values.at(-1) as { value: V; key: K }).value
       : undefined;
   }
-  
+
   async firtsKey(table: string): Promise<K | undefined> {
     if (!this.table.find((a) => a === table))
       throw new ErrorTable("Invalid table name: " + table);
@@ -375,7 +372,7 @@ class CreateStorage<K, V> extends EventEmitter {
     const keys = Object.keys(db);
     return keys.length > 0 ? (keys.at(0) as K) : undefined;
   }
-  
+
   async firtsValue(table: string): Promise<V | undefined> {
     if (!this.table.find((a) => a === table))
       throw new ErrorTable("Invalid table name: " + table);
@@ -385,8 +382,8 @@ class CreateStorage<K, V> extends EventEmitter {
       ? (values.at(0) as { value: V; key: K }).value
       : undefined;
   }
-  
-  async includes(table: string, value: V): Promise <boolean> {
+
+  async includes(table: string, value: V): Promise<boolean> {
     if (!this.table.find((a) => a === table))
       throw new ErrorTable("Invalid table name: " + table);
     const db = await get(table, this.path, this.extname);
@@ -397,8 +394,8 @@ class CreateStorage<K, V> extends EventEmitter {
     }
     return false;
   }
-  
-  async keys(table: string): Promise <K[]> {
+
+  async keys(table: string): Promise<K[]> {
     if (!this.table.find((a) => a === table))
       throw new ErrorTable("Invalid table name: " + table);
     const db = await get(table, this.path, this.extname);
@@ -408,8 +405,8 @@ class CreateStorage<K, V> extends EventEmitter {
     }
     return res;
   }
-  
-  async values(table: string): Promise <V[]> {
+
+  async values(table: string): Promise<V[]> {
     if (!this.table.find((a) => a === table))
       throw new ErrorTable("Invalid table name: " + table);
     const db = await get(table, this.path, this.extname);
@@ -419,8 +416,8 @@ class CreateStorage<K, V> extends EventEmitter {
     }
     return res;
   }
-  
-  async length(table: string): Promise <{key: number; value: number}> {
+
+  async length(table: string): Promise<{ key: number; value: number }> {
     const key = await this.keys(table);
     const value = await this.values(table);
     return { key: key.length, value: value.length };
